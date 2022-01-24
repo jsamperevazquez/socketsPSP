@@ -81,12 +81,12 @@ public class ComunicacionServidor {
                 is.read(mensaje);
                 mensajeStr = new String(mensaje, StandardCharsets.UTF_8).trim();
                 System.out.println("Mensaje recibido: " + mensajeStr);
-                if (!mensajeStr.equalsIgnoreCase("fin")){
+                if (!mensajeStr.equalsIgnoreCase("fin")) {
                     mensajeStr = "";
-                    for (int i = 0; i <mensaje.length ; i++) {
-                        mensaje[i]=0;
+                    for (int i = 0; i < mensaje.length; i++) {
+                        mensaje[i] = 0;
                     }
-                }else {
+                } else {
                     continue;
                 }
 
@@ -104,4 +104,47 @@ public class ComunicacionServidor {
         } catch (IOException e) {
         }
     }
+
+    public void sumarNumerosCliente(String direccion, int port) {
+        try {
+            System.out.println("Creando socket servidor");
+
+            ServerSocket socketServidor = new ServerSocket();
+
+            System.out.println("Realizando el bind");
+
+            InetSocketAddress addr = new InetSocketAddress(direccion, port);
+            socketServidor.bind(addr);
+
+            System.out.println("Aceptando conexiones");
+
+            Socket newSocket = socketServidor.accept();
+
+            System.out.println("Conexión recibida");
+
+            InputStream is = newSocket.getInputStream();
+
+            byte[] mensaje = new byte[25];
+            int acumulador = 0;
+            String numero;
+            for (int i = 0; i < 5 ; i++) {
+                is.read(mensaje);
+                numero = new String(mensaje,StandardCharsets.UTF_8).trim();
+                acumulador += Integer.parseInt(numero);
+                numero = "";
+            }
+            System.out.println("Mensaje recibido: la suma total de números es de  " + acumulador);
+
+            System.out.println("Cerrando el nuevo socket");
+            newSocket.close();
+
+            System.out.println("Cerrando el socket servidor");
+            socketServidor.close();
+
+            System.out.println("Terminado");
+
+        } catch (IOException e) {
+        }
+    }
 }
+

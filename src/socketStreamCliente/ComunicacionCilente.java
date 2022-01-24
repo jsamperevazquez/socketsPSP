@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 public class ComunicacionCilente {
     String mensaje = "";
+
     public void socketCliente(String direccion, int port, int numeroMensajes) {
         try {
             InetSocketAddress address = new InetSocketAddress(direccion, port);
@@ -39,8 +40,9 @@ public class ComunicacionCilente {
             e.printStackTrace();
         }
     }
+
     public void socketClienteTeclado(String direccion, int port) {
-        try{
+        try {
             Scanner in = new Scanner(System.in);
             InetSocketAddress address = new InetSocketAddress(direccion, port);
             System.out.println("Creando socket cliente");
@@ -57,7 +59,39 @@ public class ComunicacionCilente {
                 System.out.println("Enviando mensaje");
                 os.write(mensaje.getBytes(StandardCharsets.UTF_8));
                 System.out.println(mensaje);
-            } while ( !mensaje.equalsIgnoreCase("fin"));
+            } while (!mensaje.equalsIgnoreCase("fin"));
+            System.out.println("\nCerrando el socket cliente");
+
+            socketCliente.close();
+
+            System.out.println("Terminado");
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void enviarNumerosServidor(String direccion, int port, String[] numeros) {
+
+        try {
+            InetSocketAddress address = new InetSocketAddress(direccion, port);
+            System.out.println("Creando socket cliente");
+            Socket socketCliente = new Socket();
+            System.out.println("Estableciendo la conexión");
+            socketCliente.connect(address);
+
+            OutputStream os = socketCliente.getOutputStream();
+            System.out.println("Enviando mensaje \n");
+            System.out.println("Enviado numeros");
+            String numero;
+            for (int i = 0; i < 5 ; i++) {
+                    numero = numeros[i];
+                    os.write(numero.getBytes(StandardCharsets.UTF_8));
+                System.out.println("Número  " + numero + " enviado");
+            }
+
+
             System.out.println("\nCerrando el socket cliente");
 
             socketCliente.close();
@@ -70,3 +104,4 @@ public class ComunicacionCilente {
         }
     }
 }
+
